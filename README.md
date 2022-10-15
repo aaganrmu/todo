@@ -1,12 +1,13 @@
-# Simple CLI TODO tool
-A custom todo list with dependencies and priorities. I'm building this because I'm easily distracted. 
+# Simple CLI TODO
+A custom todo list with dependencies and priorities. I'm building this because I'm easily distracted and would like to have a very simple to do list tool
 ## Must haves
 - Lives in CLI
-- Reads lists from YML files
+- Lightweight
+- Reads TODO lists from files
 - Allows you to complete items
-- New items pop up once dependencies are done
-- Only show a few items at a timed
-- Quick to use, not easy
+- New items pop up once preconditions are done
+- Only show a few tasks at a time
+- Simple
 ## Nice to haves
 - Configuration for amount of tasks to show
 - List editor
