@@ -8,15 +8,10 @@ class TaskState(Enum):
     DONE = 3
 
 class Task():
-    def __init__(self, name, raw_task):
+    def __init__(self, name):
         self.name = name
-        self.priority = raw_task["priority"]
+        self.priority = 0
         self._state = TaskState.WAITING
-        try:
-            self.depends_on_raw = raw_task["depends_on"]
-        except KeyError:
-            self.depends_on_raw = None
-        self._visible = False
         self._dependencies = []
         self._depends_on = []
 
@@ -27,10 +22,6 @@ class Task():
     @state.setter
     def state(self, state):
         self._state = state
-        if state == TaskState.DONE:
-            for task in self._dependencies:
-                task.update_visibility()
-        self.update_visibility()
 
     def add_depends_on(self, task):
         if task in self._depends_on:
@@ -47,55 +38,43 @@ class Task():
 
     @property
     def visible(self):
-        return self._visible
-
-    def update_visibility(self):
         if self.state == TaskState.DONE:
-            self._visible = False
-            return
+            return False
         for task in self._depends_on:
             if task.state != TaskState.DONE:
-                self.__visible = False
-                return
-        self._visible = True
+                return False
+        return True
 
     def __str__(self):
-        return(f"Task '{self.name}' state '{self.state}' visible '{self._visible}' depends_on {len(self._depends_on)} dependencies {len(self._dependencies)}")
+        return(f"Task '{self.name}' state '{self.state}' visible '{self.visible}' depends_on {len(self._depends_on)} dependencies {len(self._dependencies)}")
+
     def __repr__(self):
         return self.__str__()
 
 
 def import_tasks(path):
-    file = open (path, "r")
-    raw_tasks = yaml.safe_load(file)
-    tasks = {}
-    for name, raw_task in raw_tasks.items():
-        task = Task(name, raw_task)
-        tasks[name] = task
-
-    for task in tasks.values():
-        parse_dependencies(task, tasks)
-
-    for task in tasks.values():
-        task.update_visibility()
-
-#    tasks.sort(key = lambda task: f"{task.priority}_{task.name}")
-    return(tasks)
-
-def parse_dependencies(task, tasks):
-    if task.depends_on_raw is None:
-        return
-    for dependee_raw in task.depends_on_raw:
-        dependee = tasks[dependee_raw]
-        dependee.add_dependency(task)
+    file = open(path, "r")
+    tasks = yaml.safe_load(file)
+    for name, raw_task in tasks.items():
+        task = Task(name)
+        try:
+            depends_on_names = raw_task['depends_on']
+            for depends_on_name in depends_on_names:
+                depends_on = tasks[depends_on_name]
+                task.add_depends_on(depends_on)
+        except KeyError:
+            pass
+        tasks[name]=task
+    return tasks
 
 
 tasks = import_tasks("list.yml")
+
 for key, value in tasks.items():
     print(value)
 
 tasks["bread"].state = TaskState.DONE
-#tasks["milk"].state = TaskState.DONE
+tasks["milk"].state = TaskState.DONE
 
 for key, value in tasks.items():
     print(value)
