@@ -3,15 +3,22 @@ from todolist import ToDoList
 from task import TaskState
 
 
-todolist = ToDoList("list.yml")
-todolist.visible_states = [state for state in TaskState]
-todolist.visible_items = 2
+todolist = ToDoList()
+todolist.import_yaml("list.yml")
 print(" START")
 print(todolist)
+print(" TRYING TO POOP")
+todolist.task_start("poop")
+print(" GOT BREAD & GETTING MILK")
 todolist.task_finish("bread")
 todolist.task_start("milk")
-print(" GOT BREAD & GETTING MILK")
 print(todolist)
-todolist.task_finish("milk")
 print(" GOT MILK")
+todolist.task_finish("milk")
+print(todolist)
+print(" POOP")
+todolist.task_start("poop")
+print(todolist)
+todolist.task_finish("poop")
+print(" FLUSH")
 print(todolist)
