@@ -2,6 +2,9 @@ import yaml
 
 from task import Task, TaskState
 
+PRIORITY_MIN = 0
+PRIORITY_MAX = 999
+
 class ToDo():
     def __init__(self, path):
         file = open(path, "r")
@@ -9,7 +12,10 @@ class ToDo():
         for name, raw_task in tasks.items():
             task = Task(name)
             try:
-                task.priority = raw_task['priority']
+                priority  = raw_task['priority']
+                if priority < PRIORITY_MIN or priority > PRIORITY_MAX:
+                    raise ValueError(f'Priority out of range [{PRIORITY_MIN}, {PRIORITY_MAX}]')
+                task.priority = priority
             except KeyError:
                 pass
             try:
@@ -23,31 +29,49 @@ class ToDo():
         self._tasks = tasks
 
         self._state_icons = {
+            TaskState.BLOCKED: "B",
             TaskState.WAITING: " ",
             TaskState.STARTED: "*",
             TaskState.DONE:    "X"
         }
 
-        self.hide_done = False
-        self.max_visible = 10
+        self._state_priorities = {
+            TaskState.STARTED: 0,
+            TaskState.WAITING: 1000,
+            TaskState.BLOCKED: 2000,
+            TaskState.DONE:    3000
+        }
 
-    def update_task(self, name, state):
+        self.visible_states = [TaskState.WAITING, TaskState.STARTED]
+        self.visible_items = 10
+
+    def _update_task_state(self, name, state):
         self._tasks[name].state = state
+
+    def task_start(self, name):
+        self._update_task_state(name, TaskState.STARTED)
+
+    def task_finish(self, name):
+        self._update_task_state(name, TaskState.DONE)
 
     @property
     def state_icons(self):
         return self._state_icons
 
     def __str__(self):
-        strings = []
+        tasks = []
         for task in self._tasks.values():
-            if not task.visible or self.hide_done:
+            if not task.state in self.visible_states:
                 continue
+            tasks.append(task)
+        tasks.sort(key = lambda task : (task.priority + self._state_priorities[task.state]))
+        tasks = tasks[:self.visible_items]
+
+        strings = []
+        for task in tasks:
             icon = self.state_icons[task.state]
             string = f'{icon} {task.name}'
             strings.append(string)
-            if len(strings) >= self.max_visible:
-                break
         return "\n".join(strings)
 
     def __repr__(self):
@@ -55,13 +79,14 @@ class ToDo():
 
 
 todolist = ToDo("list.yml")
-
+todolist.visible_states = [state for state in TaskState]
+todolist.visible_items = 2
 print(" START")
 print(todolist)
-
-
-todolist.update_task("bread", TaskState.DONE)
-todolist.update_task("milk", TaskState.DONE)
-
-print(" AND NOW")
+todolist.task_finish("bread")
+todolist.task_start("milk")
+print(" GOT BREAD & GETTING MILK")
+print(todolist)
+todolist.task_finish("milk")
+print(" GOT MILK")
 print(todolist)
