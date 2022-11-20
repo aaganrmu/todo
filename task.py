@@ -35,6 +35,12 @@ class Task():
             return
         self._depends_on.append(task)
 
+    def dict(self):
+        depends_on = list(map(lambda x : x.name, self._depends_on))
+        return {
+            'depends_on' : depends_on,
+            'priority' : self.priority
+        }
 
     def __str__(self):
         return f"{self.name} state '{self.state}' depends_on {len(self._depends_on)}"

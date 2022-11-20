@@ -3,8 +3,14 @@ from todolist import ToDoList
 from task import TaskState
 
 
+
+
+
 todolist = ToDoList()
-todolist.import_yaml("list.yml")
+todolist.import_yaml("list2.yml")
+todolist.export_yaml("list3.yml")
+
+"""
 print(" START")
 print(todolist)
 print(" TRYING TO POOP")
@@ -22,3 +28,4 @@ print(todolist)
 todolist.task_finish("poop")
 print(" FLUSH")
 print(todolist)
+"""

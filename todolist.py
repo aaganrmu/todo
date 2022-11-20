@@ -30,8 +30,8 @@ class ToDoList():
         self.message_empty_list = DEFAULT_MESSAGE_EMPTY_LIST
 
     def import_yaml(self, path):
-        file = open(path, "r")
-        tasks = yaml.safe_load(file)
+        with  open(path, "r") as file:
+            tasks = yaml.safe_load(file)
         for name, raw_task in tasks.items():
             task = Task(name)
             try:
@@ -50,10 +50,16 @@ class ToDoList():
             for depends_on_name in depends_on_names:
                 depends_on = tasks[depends_on_name]
                 task.add_depends_on(depends_on)
-
             tasks[name]=task
 
         self._tasks = tasks
+
+    def export_yaml(self, path):
+        tasks = {}
+        for name, task in self._tasks.items():
+            tasks[name] = task.dict()
+        with open(path, "w") as file:
+            yaml.dump(tasks, file)
 
     def _update_task_state(self, name, state):
         try:
