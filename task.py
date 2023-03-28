@@ -1,10 +1,12 @@
 from enum import Enum
 
+
 class TaskState(Enum):
     BLOCKED = 0
     WAITING = 1
-    STARTED =  2
+    STARTED = 2
     DONE = 3
+
 
 class Task():
     def __init__(self, name):
@@ -36,10 +38,10 @@ class Task():
         self._depends_on.append(task)
 
     def dict(self):
-        depends_on = list(map(lambda x : x.name, self._depends_on))
+        depends_on = list(map(lambda x: x.name, self._depends_on))
         return {
-            'depends_on' : depends_on,
-            'priority' : self.priority
+            'depends_on': depends_on,
+            'priority': self.priority
         }
 
     def __str__(self):

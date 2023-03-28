@@ -1,14 +1,9 @@
-
 from todolist import ToDoList
 from task import TaskState
 
-
-
-
-
 todolist = ToDoList()
-todolist.import_yaml("list2.yml")
-todolist.export_yaml("list3.yml")
+todolist.import_yaml("list.yml")
+todolist.export_yaml("list1.yml")
 
 """
 print(" START")
