@@ -1,19 +1,19 @@
+#!/usr/bin/python3
+
+
+import sys
 from todolist import ToDoList
 from task import TaskState
 
+arguments = sys.argv
 
-
-
+path = arguments[0]
+print(arguments)
 
 todolist = ToDoList()
-todolist.import_yaml("list.yml")
-changes = False
-
-
-
-if changes:
-    todolist.export_yaml("list.yml")
-
+todolist.import_yaml(path+".yml")
+todolist.export_yaml(path+".yml")
+print(todolist)
 """
 print(" START")
 print(todolist)

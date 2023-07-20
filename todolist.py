@@ -20,9 +20,9 @@ class ToDoList():
 
         self._state_priorities = {
             TaskState.STARTED: 0,
-            TaskState.WAITING: 1000,
-            TaskState.BLOCKED: 2000,
-            TaskState.DONE:    3000
+            TaskState.WAITING: 1,
+            TaskState.BLOCKED: 2,
+            TaskState.DONE:    3
         }
 
         self.visible_states = [TaskState.WAITING, TaskState.STARTED]
@@ -85,7 +85,7 @@ class ToDoList():
             tasks.append(task)
         if len(tasks) == 0:
             return self.message_empty_list
-        tasks.sort(key = lambda task : (task.priority + self._state_priorities[task.state]))
+        tasks.sort(key = lambda task : (task.priority + self._state_priorities[task.state]*(PRIORITY_MAX+1)))
         tasks = tasks[:self.visible_items]
 
         strings = []
