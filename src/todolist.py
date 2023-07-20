@@ -1,6 +1,6 @@
 import yaml
 
-from task import Task, TaskState
+from src.task import Task, TaskState
 
 PRIORITY_MIN = 0
 PRIORITY_MAX = 999

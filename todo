@@ -2,18 +2,26 @@
 
 
 import sys
-from todolist import ToDoList
-from task import TaskState
+from src.config import Config
+from src.task import TaskState
+from src.todolist import ToDoList
 
 arguments = sys.argv
 
-path = arguments[0]
-print(arguments)
+cmd_path = arguments[0]
+
+
+config = Config(cmd_path+"_config.yml")
 
 todolist = ToDoList()
-todolist.import_yaml(path+".yml")
-todolist.export_yaml(path+".yml")
+todolist.import_yaml(config.file_path)
+
+
+
+
 print(todolist)
+
+
 """
 print(" START")
 print(todolist)

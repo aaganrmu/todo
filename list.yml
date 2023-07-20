@@ -1,9 +1,11 @@
 bread:
-    priority: 1
+  depends_on: []
+  priority: 1
 milk:
-    priority: 2
+  depends_on: []
+  priority: 2
 poop:
-    priority: 0
-    depends_on:
-        - bread
-        - milk
+  depends_on:
+  - bread
+  - milk
+  priority: 0
